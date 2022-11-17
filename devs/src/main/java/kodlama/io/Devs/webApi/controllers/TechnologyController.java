@@ -1,0 +1,57 @@
+package kodlama.io.Devs.webApi.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import kodlama.io.Devs.business.abstracts.TechnologyService;
+import kodlama.io.Devs.business.requests.create.CreateTechnologyRequest;
+import kodlama.io.Devs.business.requests.delete.DeleteTechnologyRequest;
+import kodlama.io.Devs.business.requests.update.UpdateTechnologyRequest;
+import kodlama.io.Devs.business.responses.GetAllTechnologyResponse;
+import kodlama.io.Devs.entities.concretes.Technology;
+
+@RestController
+@RequestMapping("/api/technologies")
+public class TechnologyController {
+	
+	private TechnologyService service;
+	
+	@Autowired
+	public TechnologyController(TechnologyService technologyService) {
+		this.service = technologyService;
+	}
+	
+	@GetMapping("/getAll")
+	public List<GetAllTechnologyResponse> getAll(){
+		return this.service.getAll();
+	}
+	
+	@PostMapping("/add")
+	public void Add(CreateTechnologyRequest createTechnologyRequest) throws Exception {
+		this.service.add(createTechnologyRequest);
+	}
+	
+	@DeleteMapping("/delete")
+	public void Delete(DeleteTechnologyRequest deleteTechnologyRequest) throws Exception{
+		this.service.delete(deleteTechnologyRequest);
+	}
+	
+	@PutMapping("/update")
+	public void Update(int id, UpdateTechnologyRequest updateTechnologyRequest) throws Exception{
+		this.service.update(id, updateTechnologyRequest);
+	}
+	
+	public Technology getId(int id) throws Exception{
+		return this.service.getById(id);
+	}
+	
+
+
+}

@@ -1,0 +1,82 @@
+package kodlama.io.Devs.business.concretes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kodlama.io.Devs.business.abstracts.ProgrammingLanguageService;
+import kodlama.io.Devs.business.abstracts.TechnologyService;
+import kodlama.io.Devs.business.requests.create.CreateTechnologyRequest;
+import kodlama.io.Devs.business.requests.delete.DeleteTechnologyRequest;
+import kodlama.io.Devs.business.requests.update.UpdateTechnologyRequest;
+import kodlama.io.Devs.business.responses.GetAllTechnologyResponse;
+import kodlama.io.Devs.dataAccess.abstracts.ProgrammingLanguageRepository;
+import kodlama.io.Devs.dataAccess.abstracts.TechnologyRepository;
+import kodlama.io.Devs.entities.concretes.Technology;
+
+@Service
+public class TechnologyManager implements TechnologyService{
+	
+	private TechnologyRepository technologyRepository;
+	private ProgrammingLanguageRepository programmingLanguageRepository;
+	
+	@Autowired
+	public TechnologyManager(TechnologyRepository technologyRepository, ProgrammingLanguageRepository programmingLanguageRepository) {
+		this.technologyRepository = technologyRepository;
+		this.programmingLanguageRepository = programmingLanguageRepository;
+	}
+
+	@Override
+	public void add(CreateTechnologyRequest technology){
+		Technology technology_ = new Technology();
+		technology_.setName(technology.getName());
+		technology_.setLanguage(technology.getLanguage());
+		
+		technologyRepository.save(technology_);
+		
+	}
+
+	@Override
+	public void delete(DeleteTechnologyRequest technology) {
+		int id = technology.getId();
+		Technology technology_ = getById(id);
+		technologyRepository.delete(technology_);
+		
+	}
+
+	@Override 
+	public void update(UpdateTechnologyRequest technology) {
+		Technology technology_ = new Technology();
+		technology_.setName(technology.getName());
+		technology_.setLanguage(technology.getLanguage());
+		
+		
+	}
+
+	@Override
+	public List<GetAllTechnologyResponse> getAll() {
+		List<Technology> technologies = technologyRepository.findAll();
+		List<GetAllTechnologyResponse> getAllTechnologyResponses = new ArrayList<GetAllTechnologyResponse>();
+		
+		GetAllTechnologyResponse getAllTechnologyResponse = new GetAllTechnologyResponse();
+		
+		for(Technology technology: technologies) {
+			GetAllTechnologyResponse responseItem = new GetAllTechnologyResponse();
+			responseItem.setId(technology.getId());
+			responseItem.setName(technology.getName());
+			responseItem.setLanguageId(programmingLanguageService.getById(technology.getLanguage().getId()));
+			technologies.add(responseItem);
+			
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Technology getById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}
